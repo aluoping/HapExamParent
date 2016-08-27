@@ -1,0 +1,283 @@
+<#--
+ * description: DEMO
+ * version: 1.0
+ * #copyright#
+ *
+-->
+<#include "../include/head.html">
+<body style="padding: 10px;">
+<form id="orderForm"></form>
+<div id="orderGrid" style="margin: 0; padding: 0"></div>
+<script type="text/javascript">
+    $(function () {
+        window['orderForm'] = $("#orderForm").ligerForm({
+            fields : [ {//lov,点开弹出窗口则可以查看所有
+                display : "<@spring.message "company.companyname"/>",//公司名称按钮
+                name : "companyId",//最终选中的值字段名
+                type : "popup",
+                newline : false,
+                //如果不需要把lov选中的textField值放进data中那么这个属性可以不设置，如果需要放在data中就需要设置
+                textField:'companyName',
+                options:{
+                    readonly:false,//是否可编辑
+                    valueField : 'companyId',//选中的valueField
+                    textField : 'companyName',//选中的textField
+                    grid : {
+                        columns : [ {
+                            display : '<@spring.message "company.companynumber"/>',
+                            name : "companyNumber",
+                            width : 150,
+                            type : "int",
+                            align : "left"
+                        }, {
+                            display : '<@spring.message "company.companyname"/>',
+                            name : "companyName",
+                            width : 150,
+                            type : "text",
+                            align : "left"
+                        }],
+                        //数据查询的url
+                        url : '${base.contextPath}/exam/company/query' 
+                    },
+                    //lov上的查询条件
+                    condition : {
+                        inputWidth : 150,
+                        labelWidth : 70,
+                        fields : [ {
+                            display : '<@spring.message "company.companynumber"/>',
+                            name : "companyNumber",
+                            newline : true,
+                            type : "text"
+                        }, {
+                            display : '<@spring.message "company.companyname"/>',
+                            name : "companyName",
+                            newline : false,
+                            type : "text"
+                        } ]
+                    } 
+                }
+            },{//lov,点开弹出窗口则可以查看所有
+                display : "<@spring.message "customer.customername"/>",//客户名称按钮
+                name : "customerName",//最终选中的值字段名
+                type : "popup",
+                newline : false,
+                //如果不需要把lov选中的textField值放进data中那么这个属性可以不设置，如果需要放在data中就需要设置
+                textField:'customerName',
+                options:{
+                    readonly:false,//是否可编辑
+                    valueField : 'customerName',//选中的valueField
+                    textField : 'customerName',//选中的textField
+                    grid : {
+                        columns : [ {
+                            display : '<@spring.message "customer.customernumber"/>',
+                            name : "customerNumber",
+                            width : 150,
+                            type : "int",
+                            align : "left"
+                        }, {
+                            display : '<@spring.message "customer.customername"/>',
+                            name : "customerName",
+                            width : 150,
+                            type : "text",
+                            align : "left"
+                        }],
+           
+                        //数据查询的url
+                        url : '${base.contextPath}/exam/customer/query'
+                    },
+                	onLoadData: function() {
+                    	//这里设置查询参数
+                    	this.setParm('companyId', $.ligerui.get('companyId').getValue());
+                	} 
+                }
+            }, {
+                type : 'text',
+                label : '<@spring.message "orderHeaders.ordernumber"/>',
+                name : 'orderNumber',
+                width: 120
+            },{//lov,点开弹出窗口则可以查看所有
+                display : "<@spring.message "items.itemdescription"/>",//物料按钮
+                name : "itemDescription",//最终选中的值字段名
+                type : "popup",
+                newline : false,
+                //如果不需要把lov选中的textField值放进data中那么这个属性可以不设置，如果需要放在data中就需要设置
+                textField:'itemDescription',
+                options:{
+                    readonly:false,//是否可编辑
+                    valueField : 'itemDescription',//选中的valueField
+                    textField : 'itemDescription',//选中的textField
+                    grid : {
+                        columns : [ {
+                            display : '<@spring.message "items.itemcode"/>',
+                            name : "itemCode",
+                            width : 150,
+                            type : "int",
+                            align : "left"
+                        }, {
+                            display : '<@spring.message "items.itemdescription"/>',
+                            name : "itemDescription",
+                            width : 150,
+                            type : "text",
+                            align : "left"
+                        }],
+                        //数据查询的url
+                        url : '${base.contextPath}/exam/item/query' 
+                    },
+                    //lov上的查询条件
+                    condition : {
+                        inputWidth : 150,
+                        labelWidth : 70,
+                        fields : [ {
+                            display : '<@spring.message "items.itemcode"/>',
+                            name : "itemCode",
+                            newline : true,
+                            type : "text"
+                        }, {
+                            display : '<@spring.message "items.itemdescription"/>',
+                            name : "itemDescription",
+                            newline : false,
+                            type : "text"
+                        } ]
+                    } 
+                }
+            }, {
+                type : 'combobox',
+                label : '<@spring.message "order.orderstatus"/>',
+                name : 'orderStatus',
+                options : {
+                    valueField : 'ID',
+                    textField : 'text',
+                    data : [ {
+                        ID : 'new',
+                        text : '<@spring.message "status.new"/>'//test表示值
+                    }, {
+                        ID : 'submited',
+                        text : '<@spring.message "status.submited"/>'
+                    }, {
+                        ID : 'approved',
+                        text : '<@spring.message "status.approved"/>'
+                    }, {
+                        ID : 'rejected',
+                        text : '<@spring.message "status.rejected"/>'
+                    } ]
+                },
+                newline : false
+            }],
+            buttons: [{
+                text    : '<@spring.message "hap.query"/>',//查询按钮
+                disabled: false,
+                width   : 60,
+                click   : function () {
+                    Hap.gridQuery({
+                        form: orderForm,
+                        grid: orderGrid
+                    })
+                }
+            },{
+                text : '<@spring.message "hap.reset"/>',//重置按钮
+                disabled : false,
+                width : 60,
+                click : function() {
+                	orderForm.reset();
+                }
+            } ]
+        });
+
+        window['orderGrid'] = $("#orderGrid").ligerGrid({
+            unSetValidateAttr: false,
+            columns          : [{
+                display: '<@spring.message "orderHeaders.ordernumber"/>',
+                name   : 'orderNumber',
+                align  : 'left',
+                width  : 120,
+                editor : {
+                    type: 'text'
+                },
+	            validate:{
+		            required:true
+	            }
+            },{
+                display: '<@spring.message "company.companyname"/>',
+                name   : 'attribute1',
+                align  : 'left',
+                width  : 120,
+                editor : {
+                    type: 'text'
+                },
+	            validate:{
+		            required:true
+	            }
+            },{
+                display: '<@spring.message "customer.customername"/>',
+                name   : 'attribute2',
+                align  : 'left',
+                width  : 120,
+                editor : {
+                    type: 'text'
+                },
+	            validate:{
+		            required:true
+	            }
+            },{
+                display: '<@spring.message "order.orderdate"/>',
+                name   : 'orderDate',
+                align  : 'left',
+                width  : 120,
+                editor : {
+                    type: 'date'
+                },
+	            validate:{
+		            required:true
+	            }
+            },{
+                display: '<@spring.message "order.orderstatus"/>',
+                name   : 'orderStatus',
+                align  : 'left',
+                width  : 120,
+                editor : {
+                    type: 'text'
+                },
+	            validate:{
+		            required:true
+	            }
+            },{
+                display: '<@spring.message "order.ordermenay"/>',
+                name   : 'attribute3',
+                align  : 'left',
+                width  : 120,
+                editor : {
+                    type: 'text'
+                },
+	            validate:{
+		            required:true
+	            }
+            }],
+            url              : '${base.contextPath}/exam/order/query',
+            toolbar          : {
+                items: [{
+                    text   : '<@spring.message "hap.new"/>',
+                    disable: false,
+                    click  : function () {//新建按钮
+                    	window.popWin=$.ligerDialog.open({
+                    		load :false,
+                    		width : 1200,
+                    		height :800,
+                    		title :'<@spring.message "order.orderdetails"/>',
+                    		url:'order_details.html'
+              
+                    	})
+                    },
+                    icon   : 'add'
+                }, {
+                    line: true
+                }]
+            },
+            enabledEdit      : false,
+            width            : '99%',
+            height           : '98%',
+            checkbox         : true
+        });
+    });
+</script>
+</body>
+</html>

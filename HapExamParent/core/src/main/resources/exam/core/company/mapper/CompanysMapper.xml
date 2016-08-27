@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- ~ #{copyright}# -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="exam.core.company.mapper.CompanysMapper">
+	<resultMap id="BaseResultMap" type="exam.core.company.dto.Companys"
+		extends="com.hand.hap.mapper.StdMapper.STD">
+		<result column="COMPANY_ID" property="companyId" jdbcType="DECIMAL" />
+		<result column="COMPANY_NUMBER" property="companyNumber" jdbcType="VARCHAR" />
+		<result column="COMPANY_NAME" property="companyName" jdbcType="VARCHAR" />
+		<result column="ENABLED_FLAG" property="enabledFlag" jdbcType="VARCHAR" />
+		<result column="CREATION_DATE" property="creationDate" jdbcType="DATE"/>
+	</resultMap>
+
+	<select id="selectByCompany" parameterType="exam.core.company.dto.Companys"
+		resultMap="BaseResultMap">
+		SELECT h.COMPANY_ID,
+		h.COMPANY_NUMBER,
+		h.COMPANY_NAME,
+		h.ENABLED_FLAG,
+		h.CREATION_DATE
+		FROM hap_org_companys h
+		<where>
+			<if test="companyId != null">
+				and h.COMPANY_ID = #{companyId,jdbcType=DECIMAL}
+			</if>
+			<if test="companyNumber != null">
+				AND h.COMPANY_NUMBER like #{companyNumber,jdbcType=VARCHAR}
+			</if>
+			<if test="companyName != null">
+				AND h.COMPANY_NAME like #{companyName,jdbcType=VARCHAR}
+			</if>
+			<if test="enabledFlag != null">
+				AND h.ENABLED_FLAG like #{enabledFlag,jdbcType=VARCHAR}
+			</if>
+			<if test="creationDate != null">
+				AND h.CREATION_DATE like #{creationDate,jdbcType=DATE}
+			</if>
+		</where>
+	</select>
+
+</mapper>

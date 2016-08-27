@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- ~ #{copyright}# -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="exam.core.customer.mapper.CustomersMapper">
+	<resultMap id="BaseResultMap" type="exam.core.customer.dto.Customers"
+		extends="com.hand.hap.mapper.StdMapper.STD">
+		<result column="CUSTOMER_ID" property="customerId" jdbcType="DECIMAL" />
+		<result column="CUSTOMER_NUMBER" property="customerNumber" jdbcType="VARCHAR" />
+		<result column="CUSTOMER_NAME" property="customerName" jdbcType="VARCHAR" />
+		<result column="COMPANY_ID" property="companyId" jdbcType="DECIMAL" />
+		<result column="ENABLED_FLAG" property="enabledFlag" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<select id="selectByCustomer" parameterType="exam.core.customer.dto.Customers"
+		resultMap="BaseResultMap">
+		SELECT h.CUSTOMER_ID,
+		h.CUSTOMER_NUMBER,
+		h.CUSTOMER_NAME,
+		h.COMPANY_ID,
+		h.ENABLED_FLAG
+		FROM hap_ar_customers h
+		<where>
+			<if test="customerId != null">
+				and h.CUSTOMER_ID = #{customerId,jdbcType=DECIMAL}
+			</if>
+			<if test="customerNumber != null">
+				AND h.CUSTOMER_NUMBER like #{customerNumber,jdbcType=VARCHAR}
+			</if>
+			<if test="customerName != null">
+				AND h.CUSTOMER_NAME like #{customerName,jdbcType=VARCHAR}
+			</if>
+			<if test="companyId != null">
+				AND h.COMPANY_ID like #{companyId,jdbcType=DECIMAL}
+			</if>
+			<if test="enabledFlag != null">
+				AND h.ENABLED_FLAG like #{enabledFlag,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+
+</mapper>
